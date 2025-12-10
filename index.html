@@ -45,6 +45,15 @@
       .custom-cursor { cursor: url('./images/usagi-cursor.png'), auto; }
       .scrollbar-hide::-webkit-scrollbar { display: none; }
       .mirror-x { transform: scaleX(-1); }
+      
+      /* Glassmorphism utilities */
+      .glass-card {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      }
     </style>
     
     <!-- Import Maps: Fixed to prevent version conflicts -->
@@ -73,7 +82,7 @@
       import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
       import { createRoot } from 'react-dom/client';
       import { motion, AnimatePresence } from 'framer-motion';
-      import { Volume2, VolumeX, ArrowLeft, X, ArrowRight, Camera, Mic, Flame, Wind, Hand, RefreshCw, XCircle, Heart, Sparkles, Download, Share2, PenTool, AlertCircle } from 'lucide-react';
+      import { Volume2, VolumeX, ArrowLeft, X, ArrowRight, Camera, Mic, Flame, Wind, Hand, RefreshCw, XCircle, Heart, Sparkles, Download, Share2, PenTool, AlertCircle, User, Lock, Eye, EyeOff, MessageCircle, Bell } from 'lucide-react';
       import * as THREE from 'three';
       import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
       import gsap from 'gsap';
@@ -91,6 +100,8 @@
           './images/balloon3.png'
         ],
         giftImage: './images/usagi-surprise.png',
+        // Updated to .jpg as requested
+        loginBackground: './images/background.jpg', 
         sounds: {
           bgm: 'https://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg',
         }
@@ -119,6 +130,138 @@
       ];
 
       // --- 2. COMPONENTS ---
+
+      // SCENE 0: LOGIN
+      const Scene0Login = ({ onLogin }) => {
+        const [showPassword, setShowPassword] = useState(false);
+        const [username, setUsername] = useState('');
+        const [password, setPassword] = useState('');
+        const [error, setError] = useState('');
+        const [shake, setShake] = useState(false);
+
+        const handleLogin = (e) => {
+          e.preventDefault();
+          // Validation Logic
+          if (username === 'xiaoma' && password === '1227') {
+            setError('');
+            onLogin();
+          } else {
+            setError('账号或密码错误，请重试');
+            setShake(true);
+            setTimeout(() => setShake(false), 500); // Reset shake animation
+          }
+        };
+
+        return (
+          <motion.div 
+            className="fixed inset-0 z-50 flex items-center justify-center bg-cover bg-center overflow-hidden"
+            style={{ backgroundImage: `url(${ASSETS.loginBackground})` }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 1.1 }}
+            transition={{ duration: 0.8 }}
+          >
+            {/* Dark overlay for better text readability */}
+            <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]"></div>
+
+            <motion.div 
+              className="glass-card w-[90%] max-w-[400px] rounded-3xl p-8 relative z-10 flex flex-col items-center"
+              initial={{ y: 50, opacity: 0 }}
+              animate={shake ? { x: [-10, 10, -10, 10, 0] } : { y: 0, opacity: 1 }}
+              transition={shake ? { duration: 0.4 } : { delay: 0.2, type: "spring", stiffness: 50 }}
+            >
+              <h2 className="text-3xl font-bold text-white mb-2 tracking-wide drop-shadow-md">欢迎回来</h2>
+              <p className="text-white/80 text-sm mb-6">请登录您的账户</p>
+
+              <form onSubmit={handleLogin} className="w-full space-y-4">
+                {/* Username */}
+                <div className="relative group">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-colors group-focus-within:text-usagi-orange">
+                    <User size={20} />
+                  </div>
+                  <input 
+                    type="text" 
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="小主，请输入您的用户名" 
+                    className="w-full py-3.5 pl-12 pr-4 rounded-xl bg-white/80 border-none outline-none focus:bg-white focus:ring-2 focus:ring-usagi-orange/50 transition-all placeholder:text-gray-500 text-gray-700"
+                  />
+                </div>
+
+                {/* Password */}
+                <div className="relative group">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-colors group-focus-within:text-usagi-orange">
+                    <Lock size={20} />
+                  </div>
+                  <input 
+                    type={showPassword ? "text" : "password"} 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="密码" 
+                    className="w-full py-3.5 pl-12 pr-12 rounded-xl bg-white/80 border-none outline-none focus:bg-white focus:ring-2 focus:ring-usagi-orange/50 transition-all placeholder:text-gray-500 text-gray-700"
+                  />
+                  <button 
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
+
+                {/* Error Message */}
+                {error && (
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="text-red-200 bg-red-500/30 px-3 py-1 rounded-lg text-xs text-center font-bold">
+                    {error}
+                  </motion.div>
+                )}
+
+                {/* Extras */}
+                <div className="flex justify-between items-center text-xs text-white/90 px-1">
+                  <label className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
+                    <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-usagi-orange focus:ring-usagi-orange" />
+                    <span>记住我</span>
+                  </label>
+                  <button type="button" className="hover:underline hover:text-white transition-colors">忘记密码?</button>
+                </div>
+
+                {/* Login Button */}
+                <button 
+                  type="submit"
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#8A7CFB] to-[#635BFF] text-white font-bold text-lg shadow-lg hover:shadow-xl hover:opacity-90 active:scale-[0.98] transition-all mt-4"
+                >
+                  登录
+                </button>
+              </form>
+
+              {/* Divider */}
+              <div className="w-full flex items-center gap-4 my-6 text-white/60 text-xs">
+                <div className="h-px bg-white/30 flex-1"></div>
+                <span>或者</span>
+                <div className="h-px bg-white/30 flex-1"></div>
+              </div>
+
+              {/* Social Login */}
+              <div className="w-full space-y-3">
+                <button className="w-full py-2.5 rounded-xl bg-white/90 hover:bg-white text-[#07C160] font-bold border border-[#07C160]/20 flex items-center justify-center gap-2 transition-all shadow-sm">
+                  <MessageCircle size={20} fill="currentColor" className="text-[#07C160]" />
+                  <span>使用微信登录</span>
+                </button>
+                <button className="w-full py-2.5 rounded-xl bg-white/90 hover:bg-white text-[#0099FF] font-bold border border-[#0099FF]/20 flex items-center justify-center gap-2 transition-all shadow-sm">
+                  <Bell size={20} fill="currentColor" className="text-[#0099FF]" /> {/* Using Bell as a generic placeholder for QQ style */}
+                  <span>使用QQ登录</span>
+                </button>
+              </div>
+
+              {/* Footer */}
+              <div className="mt-8 text-xs text-white/80">
+                还没有账户? <button className="text-blue-200 font-bold hover:underline ml-1">立即注册</button>
+              </div>
+
+            </motion.div>
+          </motion.div>
+        );
+      };
 
       // Usagi Character Component
       const UsagiCharacter = ({ action, className, onClick, boardText }) => {
@@ -864,23 +1007,46 @@
 
       // --- APP ROOT ---
       const App = () => {
-        const [scene, setScene] = useState('INTRO');
+        // Start with LOGIN scene
+        const [scene, setScene] = useState('LOGIN');
         const [muted, setMuted] = useState(false);
         const audioRef = useRef(null);
         useEffect(() => { audioRef.current = new Audio(ASSETS.sounds.bgm); audioRef.current.loop = true; audioRef.current.volume = 0.4; }, []);
         const toggleAudio = () => { if(audioRef.current) { audioRef.current.volume = muted ? 0.4 : 0; setMuted(!muted); } };
         const start = () => { audioRef.current?.play().catch(()=>{}); setScene('PHOTO_WALL'); };
-        const back = () => { if(scene==='PHOTO_WALL') setScene('INTRO'); if(scene==='WISHES') setScene('PHOTO_WALL'); if(scene==='CAKE') setScene('WISHES'); if(scene==='OUTRO') setScene('WISHES'); };
+        
+        // New handler for login to start app
+        const handleLoginSuccess = () => {
+           audioRef.current?.play().catch(()=>{}); // Start music on login
+           setScene('INTRO');
+        };
+
+        const back = () => { 
+          if(scene==='PHOTO_WALL') setScene('INTRO'); 
+          if(scene==='WISHES') setScene('PHOTO_WALL'); 
+          if(scene==='CAKE') setScene('WISHES'); 
+          if(scene==='OUTRO') setScene('WISHES'); 
+        };
 
         return (
           <div className="relative min-h-screen font-sans text-usagi-text overflow-hidden selection:bg-usagi-pink selection:text-white">
-            <Background />
+            {/* Show background component on all pages EXCEPT Login, because Login has its own background */}
+            {scene !== 'LOGIN' && <Background />}
+            
+            {/* Audio toggle button - hidden on login usually, but let's keep it accessible or hide it if preferred. Keeping for now. */}
             <div className="fixed top-4 right-4 z-50"><button onClick={toggleAudio} className="bg-white/80 p-3 rounded-full shadow-md hover:bg-white border border-usagi-main">{muted ? <VolumeX size={24}/> : <Volume2 size={24}/>}</button></div>
-            <BackButton onClick={back} disabled={scene==='INTRO'} />
+            
+            {/* Hide back button on INTRO and LOGIN */}
+            <BackButton onClick={back} disabled={scene==='INTRO' || scene==='LOGIN'} />
+            
             <AnimatePresence mode="wait">
+              {scene === 'LOGIN' && <Scene0Login key="login" onLogin={handleLoginSuccess} />}
               {scene === 'INTRO' && <Scene1Intro key="intro" onStart={start} />}
             </AnimatePresence>
-            {scene !== 'INTRO' && <div className={`absolute inset-0 z-0 flex items-center justify-center transition-opacity duration-500 ${scene==='CAKE'?'opacity-20':'opacity-100'}`}><Scene2PhotoWall isActive={scene==='PHOTO_WALL'} onNext={()=>setScene('WISHES')} showButton={scene==='PHOTO_WALL'} isBackgroundMode={scene!=='PHOTO_WALL'} /></div>}
+            
+            {/* Persistent scenes for transition effects */}
+            {scene !== 'INTRO' && scene !== 'LOGIN' && <div className={`absolute inset-0 z-0 flex items-center justify-center transition-opacity duration-500 ${scene==='CAKE'?'opacity-20':'opacity-100'}`}><Scene2PhotoWall isActive={scene==='PHOTO_WALL'} onNext={()=>setScene('WISHES')} showButton={scene==='PHOTO_WALL'} isBackgroundMode={scene!=='PHOTO_WALL'} /></div>}
+            
             <AnimatePresence>
               {scene === 'WISHES' && <motion.div key="wishes" className="absolute inset-0 z-10" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}><Scene3Wishes onGoToCakeInteraction={()=>setScene('CAKE')} onGoToOutro={()=>setScene('OUTRO')} /></motion.div>}
               {scene === 'CAKE' && <motion.div key="cake" className="absolute inset-0 z-20 bg-black/60 backdrop-blur-sm" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}><Scene4CakeInteraction /></motion.div>}
