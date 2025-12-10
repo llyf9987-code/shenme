@@ -1,3 +1,4 @@
+ 
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -20,7 +21,8 @@
             colors: {
               usagi: {
                 main: '#F9D59B', orange: '#FBBF77', gold: '#F8C860',
-                pink: '#F8C8DC', text: '#5D4037', light: '#FFFBE6', hover: '#F7C070'
+                pink: '#F8C8DC', text: '#5D4037', light: '#FFFBE6', hover: '#F7C070',
+                cream: '#FFF9E6'
               }
             },
             fontFamily: {
@@ -31,28 +33,48 @@
             animation: {
               'float': 'float 3s ease-in-out infinite',
               'bounce-slow': 'bounce 2s infinite',
+              'drift': 'drift 10s linear infinite',
             },
             keyframes: {
-              float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } }
+              float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+              drift: { '0%': { transform: 'translateY(0) rotate(0deg)', opacity: '0' }, '50%': { opacity: '0.5' }, '100%': { transform: 'translateY(100px) rotate(180deg)', opacity: '0' } }
+            },
+            boxShadow: {
+              'soft': '0 8px 32px rgba(93, 64, 55, 0.15)',
+              'glow': '0 0 15px rgba(240, 98, 146, 0.5)',
             }
           }
         }
       }
     </script>
     <style>
-      body { background-color: #F9D59B; overflow-x: hidden; cursor: auto; }
-      /* 替换了鼠标光标为本地图片 */
-      .custom-cursor { cursor: url('./images/usagi-cursor.png'), auto; }
+      /* Apply cursor to html and body with specific hotspot coordinates (0 0) */
+      html, body { 
+        background-color: #F9D59B; 
+        overflow-x: hidden; 
+        cursor: url('./images/usagi-cursor.png') 0 0, auto !important;
+      }
+      
       .scrollbar-hide::-webkit-scrollbar { display: none; }
       .mirror-x { transform: scaleX(-1); }
       
-      /* Glassmorphism utilities */
+      /* Refined Glassmorphism */
       .glass-card {
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      }
+
+      /* Text Shadow Utilities for Title */
+      .title-glow {
+        text-shadow: 2px 2px 0px #FFF, 0 0 10px #F06292;
+      }
+      
+      /* Button Text Stroke Simulation */
+      .btn-text-stroke {
+        text-shadow: 1px 1px 0px rgba(160, 80, 0, 0.3);
       }
     </style>
     
@@ -74,7 +96,7 @@
     }
     </script>
   </head>
-  <body class="custom-cursor">
+  <body>
     <div id="root"></div>
 
     <!-- MAIN APP SCRIPT -->
@@ -82,7 +104,7 @@
       import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
       import { createRoot } from 'react-dom/client';
       import { motion, AnimatePresence } from 'framer-motion';
-      import { Volume2, VolumeX, ArrowLeft, X, ArrowRight, Camera, Mic, Flame, Wind, Hand, RefreshCw, XCircle, Heart, Sparkles, Download, Share2, PenTool, AlertCircle, User, Lock, Eye, EyeOff, MessageCircle, Bell } from 'lucide-react';
+      import { Volume2, VolumeX, ArrowLeft, X, ArrowRight, Camera, Mic, Flame, Wind, Hand, RefreshCw, XCircle, Heart, Sparkles, Download, Share2, PenTool, AlertCircle, User, Lock, Eye, EyeOff, MessageCircle, Bell, ChevronLeft } from 'lucide-react';
       import * as THREE from 'three';
       import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
       import gsap from 'gsap';
@@ -165,7 +187,7 @@
             <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]"></div>
 
             <motion.div 
-              className="glass-card w-[90%] max-w-[400px] rounded-3xl p-8 relative z-10 flex flex-col items-center"
+              className="glass-card w-[90%] max-w-[400px] rounded-2xl p-8 relative z-10 flex flex-col items-center"
               initial={{ y: 50, opacity: 0 }}
               animate={shake ? { x: [-10, 10, -10, 10, 0] } : { y: 0, opacity: 1 }}
               transition={shake ? { duration: 0.4 } : { delay: 0.2, type: "spring", stiffness: 50 }}
@@ -183,8 +205,8 @@
                     type="text" 
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="小主，请输入您的用户名" 
-                    className="w-full py-3.5 pl-12 pr-4 rounded-xl bg-white/80 border-none outline-none focus:bg-white focus:ring-2 focus:ring-usagi-orange/50 transition-all placeholder:text-gray-500 text-gray-700"
+                    placeholder="小主，请赐个用户名" 
+                    className="w-full py-3.5 pl-12 pr-4 rounded-2xl bg-white/80 border-none outline-none focus:bg-white focus:ring-2 focus:ring-usagi-orange/50 transition-all placeholder:text-gray-500 text-gray-700"
                   />
                 </div>
 
@@ -197,8 +219,8 @@
                     type={showPassword ? "text" : "password"} 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="密码" 
-                    className="w-full py-3.5 pl-12 pr-12 rounded-xl bg-white/80 border-none outline-none focus:bg-white focus:ring-2 focus:ring-usagi-orange/50 transition-all placeholder:text-gray-500 text-gray-700"
+                    placeholder="小主的通关密令" 
+                    className="w-full py-3.5 pl-12 pr-12 rounded-2xl bg-white/80 border-none outline-none focus:bg-white focus:ring-2 focus:ring-usagi-orange/50 transition-all placeholder:text-gray-500 text-gray-700"
                   />
                   <button 
                     type="button"
@@ -211,7 +233,7 @@
 
                 {/* Error Message */}
                 {error && (
-                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="text-red-200 bg-red-500/30 px-3 py-1 rounded-lg text-xs text-center font-bold">
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="text-red-200 bg-red-500/30 px-3 py-1 rounded-2xl text-xs text-center font-bold">
                     {error}
                   </motion.div>
                 )}
@@ -228,9 +250,9 @@
                 {/* Login Button */}
                 <button 
                   type="submit"
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#8A7CFB] to-[#635BFF] text-white font-bold text-lg shadow-lg hover:shadow-xl hover:opacity-90 active:scale-[0.98] transition-all mt-4"
+                  className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#8A7CFB] to-[#635BFF] text-white font-bold text-lg shadow-lg hover:shadow-xl hover:opacity-90 active:scale-[0.98] transition-all mt-4"
                 >
-                  登录
+                  小主请进
                 </button>
               </form>
 
@@ -243,12 +265,12 @@
 
               {/* Social Login */}
               <div className="w-full space-y-3">
-                <button className="w-full py-2.5 rounded-xl bg-white/90 hover:bg-white text-[#07C160] font-bold border border-[#07C160]/20 flex items-center justify-center gap-2 transition-all shadow-sm">
+                <button className="w-full py-2.5 rounded-2xl bg-white/90 hover:bg-white text-[#07C160] font-bold border border-[#07C160]/20 flex items-center justify-center gap-2 transition-all shadow-sm">
                   <MessageCircle size={20} fill="currentColor" className="text-[#07C160]" />
                   <span>使用微信登录</span>
                 </button>
-                <button className="w-full py-2.5 rounded-xl bg-white/90 hover:bg-white text-[#0099FF] font-bold border border-[#0099FF]/20 flex items-center justify-center gap-2 transition-all shadow-sm">
-                  <Bell size={20} fill="currentColor" className="text-[#0099FF]" /> {/* Using Bell as a generic placeholder for QQ style */}
+                <button className="w-full py-2.5 rounded-2xl bg-white/90 hover:bg-white text-[#0099FF] font-bold border border-[#0099FF]/20 flex items-center justify-center gap-2 transition-all shadow-sm">
+                  <Bell size={20} fill="currentColor" className="text-[#0099FF]" />
                   <span>使用QQ登录</span>
                 </button>
               </div>
@@ -360,38 +382,87 @@
         );
       };
 
-      // Back Button Component
+      // Atmospheric Particles Component (New)
+      const AtmosphereParticles = () => {
+        const particles = useMemo(() => Array.from({ length: 15 }).map((_, i) => ({
+          id: i,
+          x: Math.random() * 100,
+          y: Math.random() * 100,
+          size: Math.random() * 10 + 5,
+          color: ['#FFCdd2', '#FFF9C4', '#B2DFDB'][Math.floor(Math.random() * 3)],
+          duration: Math.random() * 10 + 10,
+          delay: Math.random() * 5
+        })), []);
+
+        return (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            {particles.map((p) => (
+              <motion.div
+                key={p.id}
+                className="absolute rounded-full opacity-30"
+                style={{
+                  left: `${p.x}%`,
+                  top: -20,
+                  width: p.size,
+                  height: p.size,
+                  backgroundColor: p.color,
+                  boxShadow: `0 0 10px ${p.color}`
+                }}
+                animate={{
+                  y: ['0vh', '100vh'],
+                  x: [0, Math.random() * 50 - 25],
+                  rotate: [0, 360]
+                }}
+                transition={{
+                  duration: p.duration,
+                  repeat: Infinity,
+                  ease: "linear",
+                  delay: p.delay
+                }}
+              />
+            ))}
+          </div>
+        );
+      };
+
+      // Back Button Component (Updated)
       const BackButton = ({ onClick, disabled = false }) => (
-        <motion.button onClick={onClick} disabled={disabled} initial={{ opacity: 0 }} animate={{ opacity: disabled ? 0.5 : 1 }} whileHover={!disabled ? { scale: 1.1 } : {}} whileTap={!disabled ? { scale: 0.9 } : {}}
-          className={`fixed bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 rounded-full shadow-lg border-4 border-white transition-colors duration-300 ${disabled ? 'bg-usagi-main/50 cursor-not-allowed text-white/50' : 'bg-usagi-main hover:bg-usagi-hover text-usagi-text cursor-pointer'}`}>
-          <div className="absolute -top-4 left-2 w-4 h-8 bg-inherit rounded-full border-2 border-white transform -rotate-12 -z-10" />
-          <div className="absolute -top-4 right-2 w-4 h-8 bg-inherit rounded-full border-2 border-white transform rotate-12 -z-10" />
-          <ArrowLeft size={32} strokeWidth={3} />
+        <motion.button 
+          onClick={onClick} 
+          disabled={disabled} 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: disabled ? 0.5 : 1 }} 
+          whileHover={!disabled ? { scale: 1.1 } : {}} 
+          whileTap={!disabled ? { scale: 0.95 } : {}}
+          className={`fixed bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 rounded-full shadow-lg border-4 border-white transition-all duration-300 overflow-hidden ${disabled ? 'bg-usagi-main/50 cursor-not-allowed grayscale' : 'bg-[#F9D59B] hover:bg-[#F7C070] cursor-pointer'}`}
+        >
+          <div className="w-10 h-10 mt-1">
+             <UsagiCharacter action="idle" className="w-full h-full" />
+          </div>
         </motion.button>
       );
 
       // --- 3. SCENES ---
 
-      // SCENE 1: Intro (Updated Balloon Logic)
+      // SCENE 1: Intro
       const Scene1Intro = ({ onStart }) => {
         const balloons = useMemo(() => {
-          // Generates 15 balloons with randomized physical properties for natural movement
           return Array.from({ length: 15 }).map((_, i) => {
-            const scale = Math.random() * 0.4 + 0.8; // Random size: 0.8x to 1.2x
-            const speed = Math.random() * 10 + 15;   // Rise duration: 15s to 25s (slow & natural)
-            const sway = Math.random() * 50 + 30;    // Horizontal sway distance: 30px to 80px
-            const swayTime = Math.random() * 3 + 4;  // Sway cycle duration: 4s to 7s
+            const scale = Math.random() * 0.4 + 0.8;
+            const speed = Math.random() * 10 + 15;
+            const sway = Math.random() * 50 + 30;
+            const swayTime = Math.random() * 3 + 4;
             
             return {
               id: i,
               src: ASSETS.balloons[i % ASSETS.balloons.length],
-              left: Math.random() * 90 + 5, // Random start X: 5% to 95%
+              left: Math.random() * 90 + 5,
               scale: scale,
               duration: speed,
-              delay: Math.random() * 12,    // Staggered start delay up to 12s
+              delay: Math.random() * 12,
               swayAmount: sway,
               swayDuration: swayTime,
-              rotateAmount: Math.random() * 10 + 5 // Slight rotation wobble
+              rotateAmount: Math.random() * 10 + 5
             };
           });
         }, []);
@@ -406,14 +477,14 @@
                 style={{ left: `${b.left}%`, scale: b.scale }}
                 initial={{ y: 0 }}
                 animate={{ 
-                  y: -window.innerHeight - 300, // Move well above the screen
-                  x: [0, b.swayAmount, 0, -b.swayAmount, 0], // Continuous sine-wave like sway
-                  rotate: [0, b.rotateAmount, 0, -b.rotateAmount, 0] // Gentle wobble
+                  y: -window.innerHeight - 300,
+                  x: [0, b.swayAmount, 0, -b.swayAmount, 0],
+                  rotate: [0, b.rotateAmount, 0, -b.rotateAmount, 0]
                 }} 
                 transition={{ 
                   y: { duration: b.duration, ease: "linear", repeat: Infinity, delay: b.delay }, 
                   x: { duration: b.swayDuration, ease: "easeInOut", repeat: Infinity },
-                  rotate: { duration: b.swayDuration - 1, ease: "easeInOut", repeat: Infinity } // Slightly offset from sway
+                  rotate: { duration: b.swayDuration - 1, ease: "easeInOut", repeat: Infinity }
                 }} 
               />
             ))}
@@ -448,7 +519,7 @@
         return (
           <div className={`w-full h-full flex flex-col items-center justify-center p-4 transition-all duration-1000 ${isBackgroundMode ? 'brightness-50 opacity-40 grayscale-[0.2]' : ''}`}>
             {!isBackgroundMode && isActive && (
-              <motion.h2 initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-3xl md:text-5xl font-hand text-usagi-text mb-6 z-10 drop-shadow-sm text-center">我们的美好瞬间</motion.h2>
+              <motion.h2 initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-3xl md:text-5xl font-hand text-usagi-text mb-6 z-10 drop-shadow-sm text-center">Our Beautiful Moments</motion.h2>
             )}
             <motion.div className="relative bg-white/60 backdrop-blur-sm border-[6px] border-[#FFF5E1] shadow-2xl grid grid-cols-3 gap-[3px]" style={{ width: '85%', height: '70%' }} initial={{ scale: 0.95 }} animate={photosGathered ? { scale: 1.05 } : { scale: 1 }}>
               {PHOTOS.map((photo, index) => (
@@ -473,42 +544,131 @@
         );
       };
 
-      // SCENE 3: Wishes
+      // SCENE 3: Wishes - REFINED & DETAILED
       const Scene3Wishes = ({ onGoToCakeInteraction, onGoToOutro }) => {
         const [giftOpen, setGiftOpen] = useState(false);
-        const [scrollY, setScrollY] = useState(0);
-        useEffect(() => {
-          const handleScroll = () => setScrollY(window.scrollY);
-          window.addEventListener('scroll', handleScroll);
-          return () => window.removeEventListener('scroll', handleScroll);
-        }, []);
+        const letterChars = BIRTHDAY_LETTER.split('');
+
+        // Staggered animation for characters
+        const containerVariants = {
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.05, delayChildren: 0.3 }
+          }
+        };
+
+        const charVariants = {
+          hidden: { opacity: 0, y: 5 },
+          visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+        };
+
         return (
-          <div className="relative min-h-screen w-full overflow-y-auto">
-            <div className="relative z-20 flex flex-col md:flex-row min-h-screen items-center justify-center p-6 gap-8 md:gap-16">
-              <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 max-w-lg bg-[rgba(249,213,155,0.85)] backdrop-blur-sm p-8 rounded-[2rem] shadow-xl border-4 border-white/50">
-                <h2 className="text-4xl font-hand font-bold text-usagi-text mb-6 drop-shadow-sm">祝{RECIPIENT_NAME}生日快乐!</h2>
-                <p className="font-hand text-2xl leading-loose whitespace-pre-line text-[#5D4037] drop-shadow-sm">{BIRTHDAY_LETTER}</p>
-                <div className="mt-10 flex items-center justify-end gap-3 text-usagi-text"><span className="font-bold text-lg font-sans">来自 {SENDER_NAME}</span><div className="w-10 h-10 bg-usagi-orange rounded-full overflow-hidden border-2 border-white flex items-center justify-center"><span className="text-xl">🐰</span></div></div>
+          <div className="relative min-h-screen w-full flex items-center justify-center p-4 md:p-8 overflow-y-auto">
+            {/* Atmospheric Decoration */}
+            <AtmosphereParticles />
+
+            <div className="relative z-20 w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+              
+              {/* Left Side: Upgraded Text Area */}
+              <motion.div 
+                initial={{ x: -30, opacity: 0 }} 
+                animate={{ x: 0, opacity: 1 }} 
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="w-full bg-gradient-to-b from-[#FFF9E6]/80 to-[#FFF9E6]/40 backdrop-blur-[5px] border border-white/40 shadow-soft p-8 md:p-12 rounded-2xl relative flex flex-col justify-between min-h-[420px]"
+              >
+                {/* Header with Glowing Title */}
+                <div className="flex items-center gap-3 mb-8">
+                  <motion.h2 
+                    className="text-[28px] md:text-3xl font-cute font-bold text-[#F06292] tracking-wide title-glow"
+                    animate={{ y: [0, -3, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    祝{RECIPIENT_NAME}生日快乐！
+                  </motion.h2>
+                  <motion.div 
+                    className="w-12 h-12 -mt-2"
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <UsagiCharacter action="cheer" className="w-full h-full" />
+                  </motion.div>
+                </div>
+
+                {/* Cute Handwritten Body Text (Character Fade In) */}
+                <motion.div 
+                  className="font-cute text-xl md:text-2xl text-[#5D4037] leading-[1.8] tracking-wide flex-grow"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  {letterChars.map((char, i) => (
+                    <motion.span key={i} variants={charVariants}>
+                      {char}
+                    </motion.span>
+                  ))}
+                </motion.div>
+
+                {/* Signature */}
+                <div className="mt-8 flex justify-end">
+                  <span className="text-sm font-sans text-gray-500/80 tracking-widest uppercase">
+                    来自 {SENDER_NAME}
+                  </span>
+                </div>
               </motion.div>
-              <div className="flex-1 flex flex-col items-center gap-10 relative pb-20 md:pb-0">
-                <motion.div className="absolute -right-4 top-0 hidden md:block pointer-events-none" animate={{ y: scrollY * 0.5 + 20 }} transition={{ type: "spring", stiffness: 50 }}><UsagiCharacter action="jump" className="w-36 h-36" /></motion.div>
-                <motion.div className="relative cursor-pointer z-20 group" onClick={onGoToCakeInteraction} whileHover={{ scale: 1.1 }}>
-                  <div className="relative flex flex-col items-center"><div className="text-[9rem] leading-none drop-shadow-2xl transition-transform group-hover:rotate-6">🎂</div><span className="mt-4 bg-white/90 px-4 py-2 rounded-full text-sm font-bold text-usagi-text opacity-0 group-hover:opacity-100 transition-opacity shadow-md">进入蛋糕房 🕯️</span></div>
+
+              {/* Right Side: Refined Interaction Stack */}
+              <div className="flex flex-col items-center gap-8 relative">
+                
+                {/* 1. Cake (Top) with Float Hover */}
+                <motion.div 
+                  className="relative cursor-pointer group" 
+                  onClick={onGoToCakeInteraction} 
+                  whileHover={{ y: -5, filter: "drop-shadow(0 10px 10px rgba(0,0,0,0.1))" }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <div className="text-[8rem] md:text-[9rem] leading-none transition-transform group-hover:rotate-3">🎂</div>
+                  <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white/90 px-4 py-1.5 rounded-full text-xs font-bold text-usagi-text opacity-0 group-hover:opacity-100 transition-opacity shadow-sm whitespace-nowrap border border-usagi-orange/20">
+                    点燃蜡烛 🕯️
+                  </span>
                 </motion.div>
-                <motion.div className="relative cursor-pointer z-20" onClick={() => setGiftOpen(true)} whileHover={{ rotate: [0, -5, 5, 0], scale: 1.05 }}>
-                  <div className="text-8xl drop-shadow-xl filter brightness-110">🎁</div><div className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-white/50 px-2 rounded-md text-xs font-bold text-usagi-text/70">拆礼物!</div>
+
+                {/* 2. Gift (Middle) with Float Hover */}
+                <motion.div 
+                  className="relative cursor-pointer" 
+                  onClick={() => setGiftOpen(true)} 
+                  whileHover={{ y: -5, rotate: [0, -5, 5, 0], filter: "drop-shadow(0 10px 10px rgba(0,0,0,0.1))" }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <div className="text-7xl md:text-8xl filter brightness-105">🎁</div>
                 </motion.div>
-                <motion.button onClick={onGoToOutro} className="mt-4 bg-usagi-main text-usagi-text font-bold py-3 px-8 rounded-full shadow-lg border-2 border-white hover:bg-usagi-orange transition-colors flex items-center gap-2">许个愿望 <ArrowRight size={20} /></motion.button>
+
+                {/* 3. Button (Bottom) with Ripple & Gradient */}
+                <motion.button 
+                  onClick={onGoToOutro} 
+                  whileHover={{ scale: 1.05, boxShadow: "0 10px 20px rgba(251, 191, 119, 0.4)" }}
+                  whileTap={{ scale: 0.95 }}
+                  className="mt-4 bg-gradient-to-r from-[#FFB74D] to-[#FF8A65] text-white font-bold text-lg py-4 px-12 rounded-2xl shadow-soft border border-white/30 transition-all flex items-center gap-2 btn-text-stroke relative overflow-hidden group"
+                >
+                  <span className="relative z-10">许个愿望</span>
+                  <ArrowRight size={20} className="relative z-10" />
+                  {/* Ripple overlay */}
+                  <div className="absolute inset-0 bg-white/20 scale-0 group-active:scale-150 transition-transform duration-300 rounded-full origin-center"></div>
+                </motion.button>
+
               </div>
             </div>
+
+            {/* Gift Popup Overlay */}
             <AnimatePresence>
               {giftOpen && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-                  <motion.div initial={{ scale: 0.5, y: 100 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.5, opacity: 0 }} className="relative bg-gradient-to-br from-usagi-light to-usagi-main p-1 rounded-[2rem] shadow-2xl max-w-sm w-full">
-                    <div className="bg-white rounded-[1.8rem] p-6 text-center border-4 border-dashed border-usagi-orange relative overflow-hidden">
+                  <motion.div initial={{ scale: 0.5, y: 100 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.5, opacity: 0 }} className="relative bg-gradient-to-br from-usagi-light to-usagi-main p-1 rounded-2xl shadow-2xl max-w-sm w-full">
+                    <div className="bg-white rounded-2xl p-6 text-center border-4 border-dashed border-usagi-orange relative overflow-hidden">
                       <button onClick={() => setGiftOpen(false)} className="absolute top-2 right-2 p-2 text-usagi-text hover:bg-usagi-pink/20 rounded-full transition-colors"><X size={28} /></button>
                       <img src={ASSETS.giftImage} alt="Surprise" className="w-full h-48 object-contain mb-4 rounded-lg bg-usagi-light/50" />
-                      <h3 className="text-2xl font-hand font-bold text-usagi-orange mb-2">惊喜!</h3>
+                      <h3 className="text-2xl font-cute font-bold text-usagi-orange mb-2">惊喜!</h3>
                       <p className="text-lg text-usagi-text font-sans font-medium">{GIFT_SURPRISES.messages[Math.floor(Math.random() * GIFT_SURPRISES.messages.length)]}</p>
                     </div>
                   </motion.div>
@@ -519,7 +679,7 @@
         );
       };
 
-      // SCENE 4: Cake Interaction (Particle & 3D)
+      // SCENE 4: Cake Interaction
       const Scene4CakeInteraction = () => {
         const containerRef = useRef(null);
         const videoRef = useRef(null);
@@ -544,28 +704,20 @@
         const [handVisible, setHandVisible] = useState(false);
         const [surpriseActive, setSurpriseActive] = useState(false);
 
-        // Keep a ref of current state for callbacks (Stale closure fix)
         const stateRef = useRef({ cakeState, surpriseActive });
         useEffect(() => { stateRef.current = { cakeState, surpriseActive }; }, [cakeState, surpriseActive]);
 
-        // Cleanup function - Memoized to be used in both useEffect cleanup and startCamera
         const stopCamera = useCallback(() => {
              cameraActive.current = false;
-             
-             // Stop all tracks in the stored stream
              if (streamRef.current) {
                 streamRef.current.getTracks().forEach(track => {
                     try { track.stop(); } catch(e) {}
                 });
                 streamRef.current = null;
              }
-             
-             // Disconnect video element
              if (videoRef.current) {
                 videoRef.current.srcObject = null;
              }
-             
-             // Close Hands instance
              if (handsRef.current) {
                 try { handsRef.current.close(); } catch(e) {}
                 handsRef.current = null;
@@ -592,7 +744,6 @@
           controls.enableDamping = true; controls.dampingFactor = 0.05; controls.autoRotate = true; controls.autoRotateSpeed = 2.0; controls.enableZoom = false; controls.enablePan = false;
           controlsRef.current = controls;
 
-          // Generate Particles
           const positions = new Float32Array(CONFIG.particleCount * 3);
           const targets = new Float32Array(CONFIG.particleCount * 3);
           const heartTargets = new Float32Array(CONFIG.particleCount * 3);
@@ -603,11 +754,9 @@
 
           for (let i = 0; i < CONFIG.particleCount; i++) {
             const i3 = i * 3;
-            // Scattered
             const r = 25 * Math.cbrt(Math.random()); const theta = Math.random() * Math.PI * 2; const phi = Math.acos(2 * Math.random() - 1);
             positions[i3] = r * Math.sin(phi) * Math.cos(theta); positions[i3 + 1] = r * Math.sin(phi) * Math.sin(theta); positions[i3 + 2] = r * Math.cos(phi);
             
-            // Cake
             const rand = Math.random(); let color = new THREE.Color(); let type = 0; let size = Math.random() * 0.5 + 0.8; let tx = 0, ty = 0, tz = 0; const yOffset = -0.5;
             if (rand < 0.65) {
               const noise = (Math.random() - 0.5) * 0.1;
@@ -626,7 +775,6 @@
             targets[i3] = tx; targets[i3+1] = ty; targets[i3+2] = tz;
             colors[i3] = color.r; colors[i3+1] = color.g; colors[i3+2] = color.b; sizes[i] = size; types[i] = type;
 
-            // Heart
             const t = Math.random() * Math.PI * 2;
             let hx = 16 * Math.pow(Math.sin(t), 3); let hy = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
             const scale = 0.65; hx *= scale; hy *= scale;
@@ -701,7 +849,6 @@
           };
           animate();
 
-          // Cleanup using the stable stopCamera reference
           return () => { 
             cancelAnimationFrame(rAF); 
             if(rendererRef.current) rendererRef.current.dispose(); 
@@ -751,7 +898,6 @@
         }, [feedback]);
 
         const onHandResults = (results) => {
-          // Read latest state from ref
           const { cakeState: currentCakeState, surpriseActive: currentSurpriseActive } = stateRef.current;
 
           if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
@@ -763,20 +909,16 @@
           setHandVisible(true);
           const lm = results.multiHandLandmarks[0];
 
-          // 1. Helpers
           const getDist = (p1, p2) => Math.hypot(lm[p1].x - lm[p2].x, lm[p1].y - lm[p2].y);
           
-          // 2. Finger States
           const isFingerFolded = (tip, pip) => getDist(tip, 0) < getDist(pip, 0); 
 
           const indexFolded = isFingerFolded(8, 6);
           const middleFolded = isFingerFolded(12, 10);
           const ringFolded = isFingerFolded(16, 14);
           const pinkyFolded = isFingerFolded(20, 18);
-          // Thumb is folded if tip is close to Pinky MCP (17) or Index MCP (5)
           const thumbFolded = getDist(4, 17) < 0.15 || getDist(4, 5) < 0.1;
 
-          // 3. Gesture Definitions
           const isPinch = getDist(4, 8) < CONFIG.thresholds.pinchDist; 
           const isPeace = !indexFolded && !middleFolded && ringFolded && pinkyFolded;
           const foldedCount = [indexFolded, middleFolded, ringFolded, pinkyFolded].filter(Boolean).length;
@@ -790,9 +932,8 @@
           else if (isOpen) currentGesture = 'OPEN';
           setDetectedGesture(currentGesture);
 
-          // 4. State Machine with Debounce
           const now = Date.now();
-          if (now - lastActionTime.current < 800) return; // Debounce actions
+          if (now - lastActionTime.current < 800) return;
 
           if (isPeace && !currentSurpriseActive) {
             setSurpriseActive(true);
@@ -811,7 +952,6 @@
              return;
           }
 
-          // Normal Flow
           if (currentCakeState === 'SCATTERED' && isFist) {
              setCakeState('ASSEMBLED');
              triggerAction('ASSEMBLED');
@@ -831,7 +971,7 @@
 
         const startCamera = async () => {
           if (cameraActive.current) return;
-          stopCamera(); // Force cleanup before start
+          stopCamera();
           
           try {
               if (!window.Hands) throw new Error("MediaPipe Hands not loaded");
@@ -841,7 +981,6 @@
               hands.onResults(onHandResults);
               handsRef.current = hands;
 
-              // Retry logic for camera stream
               const getStream = async (tries) => {
                   try {
                      return await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, facingMode: 'user' } });
@@ -855,7 +994,6 @@
                   }
               };
 
-              // Try getting the stream (retry once if busy)
               const stream = await getStream(1);
               streamRef.current = stream;
               
@@ -874,7 +1012,6 @@
 
                   const loop = async () => {
                       if (!cameraActive.current || !videoRef.current || !handsRef.current) return;
-                      // Safe send
                       if(videoRef.current.readyState === 4 && !videoRef.current.paused && !videoRef.current.ended) {
                         try {
                            await handsRef.current.send({ image: videoRef.current });
@@ -1007,7 +1144,6 @@
 
       // --- APP ROOT ---
       const App = () => {
-        // Start with LOGIN scene
         const [scene, setScene] = useState('LOGIN');
         const [muted, setMuted] = useState(false);
         const audioRef = useRef(null);
@@ -1015,9 +1151,8 @@
         const toggleAudio = () => { if(audioRef.current) { audioRef.current.volume = muted ? 0.4 : 0; setMuted(!muted); } };
         const start = () => { audioRef.current?.play().catch(()=>{}); setScene('PHOTO_WALL'); };
         
-        // New handler for login to start app
         const handleLoginSuccess = () => {
-           audioRef.current?.play().catch(()=>{}); // Start music on login
+           audioRef.current?.play().catch(()=>{}); 
            setScene('INTRO');
         };
 
@@ -1030,13 +1165,10 @@
 
         return (
           <div className="relative min-h-screen font-sans text-usagi-text overflow-hidden selection:bg-usagi-pink selection:text-white">
-            {/* Show background component on all pages EXCEPT Login, because Login has its own background */}
             {scene !== 'LOGIN' && <Background />}
             
-            {/* Audio toggle button - hidden on login usually, but let's keep it accessible or hide it if preferred. Keeping for now. */}
             <div className="fixed top-4 right-4 z-50"><button onClick={toggleAudio} className="bg-white/80 p-3 rounded-full shadow-md hover:bg-white border border-usagi-main">{muted ? <VolumeX size={24}/> : <Volume2 size={24}/>}</button></div>
             
-            {/* Hide back button on INTRO and LOGIN */}
             <BackButton onClick={back} disabled={scene==='INTRO' || scene==='LOGIN'} />
             
             <AnimatePresence mode="wait">
@@ -1044,7 +1176,6 @@
               {scene === 'INTRO' && <Scene1Intro key="intro" onStart={start} />}
             </AnimatePresence>
             
-            {/* Persistent scenes for transition effects */}
             {scene !== 'INTRO' && scene !== 'LOGIN' && <div className={`absolute inset-0 z-0 flex items-center justify-center transition-opacity duration-500 ${scene==='CAKE'?'opacity-20':'opacity-100'}`}><Scene2PhotoWall isActive={scene==='PHOTO_WALL'} onNext={()=>setScene('WISHES')} showButton={scene==='PHOTO_WALL'} isBackgroundMode={scene!=='PHOTO_WALL'} /></div>}
             
             <AnimatePresence>
