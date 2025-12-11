@@ -1,4 +1,3 @@
- 
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -122,8 +121,8 @@
           './images/balloon3.png'
         ],
         giftImage: './images/usagi-surprise.png',
-        // Updated to .jpg as requested
-        loginBackground: './images/background.jpg', 
+        // Updated to external URL as requested
+        loginBackground: 'https://xland.eu.org/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251211/js6e/1922X1074/background.jpg', 
         sounds: {
           bgm: 'https://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg',
         }
@@ -285,7 +284,7 @@
         );
       };
 
-      // Usagi Character Component
+      // Usagi Character Component (Updated with Custom Image)
       const UsagiCharacter = ({ action, className, onClick, boardText }) => {
         const variants = {
           idle: { y: [0, -5, 0], transition: { repeat: Infinity, duration: 2 } },
@@ -307,56 +306,46 @@
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <svg viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-lg">
-              <g stroke="#F9D59B" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round">
-                  <path d="M30 40C20 10 35 0 45 10C55 20 40 50 40 50" fill="#FFF" />
-                  <path d="M90 40C100 10 85 0 75 10C65 20 80 50 80 50" fill="#FFF" />
-                  <ellipse cx="60" cy="90" rx="50" ry="55" fill="#FFF" />
-              </g>
-              <g stroke="#5D4037" strokeWidth="3" strokeLinecap="round">
-                  <circle cx="45" cy="80" r="3" fill="#5D4037" stroke="none"/>
-                  <circle cx="75" cy="80" r="3" fill="#5D4037" stroke="none"/>
-                  {action === 'cheer' || action === 'jump' || action === 'heart' ? (
-                      <path d="M50 90 Q60 100 70 90" strokeWidth="2" fill="none"/>
-                  ) : action === 'shhh' ? (
-                      <circle cx="60" cy="95" r="5" fill="#F8C8DC" stroke="none"/> 
-                  ) : (
-                      <path d="M55 90 Q60 95 65 90" strokeWidth="2" fill="none"/>
-                  )}
-                  <circle cx="35" cy="90" r="6" fill="#F8C8DC" stroke="none" opacity="0.6" />
-                  <circle cx="85" cy="90" r="6" fill="#F8C8DC" stroke="none" opacity="0.6" />
-                  {action === 'wave' || action === 'cheer' || action === 'heart' ? (
-                      <path d="M15 80 Q5 60 25 50" />
-                  ) : action === 'hold-board' ? (
-                      <path d="M20 100 Q30 90 40 100" />
-                  ) : (
-                      <path d="M20 100 Q10 110 30 110" />
-                  )}
-                  {action === 'camera' ? (
-                      <rect x="40" y="95" width="40" height="25" rx="2" fill="#333" stroke="none"/>
-                  ) : action === 'hold-board' ? (
-                      <path d="M100 100 Q90 90 80 100" />
-                  ) : action === 'heart' ? (
-                      <path d="M105 80 Q115 60 95 50" />
-                  ) : (
-                      <path d="M100 100 Q110 110 90 110" />
-                  )}
-                  <path d="M40 135 Q40 150 50 145" />
-                  <path d="M80 135 Q80 150 70 145" />
-              </g>
-              {action === 'heart' && (
-                  <path d="M60 40 L65 35 M60 40 L55 35" stroke="#FF8A80" strokeWidth="2" />
-              )}
-              {action === 'hold-board' && (
-                  <foreignObject x="10" y="30" width="100" height="60">
-                      <div className="w-full h-full bg-white border-2 border-dashed border-usagi-orange rounded-lg flex items-center justify-center p-1 shadow-md transform -rotate-2">
-                          <div className="text-[10px] text-center font-hand text-usagi-text leading-tight break-words w-full">
-                              {boardText || "Happy Birthday!"}
-                          </div>
+            {/* Replaced SVG with Custom Image */}
+            <img 
+              src="./images/mai.png" 
+              alt="Character" 
+              className="w-full h-full object-contain drop-shadow-lg pointer-events-none"
+              draggable="false"
+            />
+            
+            {/* Accessories / Overlays based on action */}
+            {action === 'heart' && (
+                <motion.div 
+                  className="absolute -top-4 -right-4 text-4xl filter drop-shadow-md"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: [1, 1.2, 1], opacity: 1 }}
+                  transition={{ duration: 0.8, repeat: Infinity }}
+                >
+                  ❤️
+                </motion.div>
+            )}
+
+            {action === 'camera' && (
+                <motion.div 
+                  className="absolute bottom-0 right-0 text-3xl filter drop-shadow-md"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  📷
+                </motion.div>
+            )}
+            
+            {/* Hold Board Overlay */}
+            {action === 'hold-board' && (
+               <div className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[40%] max-w-[300px]">
+                  <div className="w-full h-full bg-white border-4 border-dashed border-usagi-orange rounded-xl flex items-center justify-center p-3 shadow-lg transform -rotate-2 relative z-10">
+                      <div className="text-sm md:text-xl text-center font-hand text-usagi-text leading-tight break-words w-full h-full flex items-center justify-center">
+                          {boardText || "Happy Birthday!"}
                       </div>
-                  </foreignObject>
-              )}
-            </svg>
+                  </div>
+               </div>
+            )}
           </motion.div>
         );
       };
