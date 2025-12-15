@@ -63,7 +63,7 @@
       html, body { 
         background-color: #F9D59B; 
         overflow-x: hidden; 
-        cursor: url('https://xland.eu.org/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/B4LO/32X33/usagi-cursor.png') 0 0, auto !important;
+        cursor: url('https://test.fukit.cn/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/B4LO/32X33/usagi-cursor.png/webp') 0 0, auto !important;
       }
       
       .scrollbar-hide::-webkit-scrollbar { display: none; }
@@ -157,19 +157,18 @@
       const SENDER_NAME = "小马"; 
       
       // Updated Audio URL
-      const AUDIO_URL = "https://p-tok1.pcloud.com/cBZHLJ2Rk7Zul5miT7ZsDnC7ZZYijn0kZlXZZg5zZZsznuZ0pZCQZsRZGLZOQZVmZPpZczZTLZf8Z8mZiRZJHZaFZdStC5ZIJCD3C6aoEHpPHfFszGmHmw0f0BX/7a2ac1e3fd83618b119afa5b1aaf0c2b.mp3"; 
-      
+      const AUDIO_URL = 'https://audio.fukit.cn/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251215/tju5/7a2ac1e3fd83618b119afa5b1aaf0c2b.mp3'
       const ASSETS = {
         balloons: [
-          'https://xland.eu.org/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/ID9X/4276X4224/balloon1.png',
-          'https://xland.eu.org/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/SeRS/4320X4288/balloon2.png',
-          'https://xland.eu.org/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/mzlX/4284X4252/balloon3.png'
+          'https://test.fukit.cn/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/ID9X/4276X4224/balloon1.png/webp',
+          'https://test.fukit.cn/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/SeRS/4320X4288/balloon2.png/webp',
+          'https://test.fukit.cn/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/mzlX/4284X4252/balloon3.png/webp'
         ],
         giftImage: './images/usagi-surprise.png',
         loginBackground: 'https://xland.eu.org/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251211/js6e/1922X1074/background.jpg', 
         sounds: {
           // Updated BGM to match the requested audio
-          bgm: 'https://p-tok1.pcloud.com/cBZHLJ2Rk7Zul5miT7ZsDnC7ZZYijn0kZlXZZg5zZZsznuZ0pZCQZsRZGLZOQZVmZPpZczZTLZf8Z8mZiRZJHZaFZdStC5ZIJCD3C6aoEHpPHfFszGmHmw0f0BX/7a2ac1e3fd83618b119afa5b1aaf0c2b.mp3',
+          bgm: 'https://audio.fukit.cn/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251215/tju5/7a2ac1e3fd83618b119afa5b1aaf0c2b.mp3',
         }
       };
 
@@ -355,7 +354,7 @@
                transition={isAnimating ? { duration: 0.6, times: [0, 0.4, 1], ease: "easeInOut" } : {}}
             >
                <img 
-                 src="https://xland.eu.org/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/bzad/2768X2688/back.png" 
+                 src="https://test.fukit.cn/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/bzad/2768X2688/back.png/webp" 
                  alt="Back" 
                  className="w-20 md:w-24 object-contain filter drop-shadow-lg hover:brightness-105 transition-all" 
                  draggable="false"
@@ -782,7 +781,7 @@
             whileTap={{ scale: 0.95 }}
           >
             <img 
-              src={imageSrc || "https://xland.eu.org/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/P3yB/4272X4300/mai.png"} 
+              src={imageSrc || "https://test.fukit.cn/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/P3yB/4272X4300/mai.png/webp"} 
               alt="Character" 
               className="w-full h-full object-contain drop-shadow-lg pointer-events-none"
               draggable="false"
@@ -890,7 +889,7 @@
 
       // SCENE 1: Intro (UPDATED WITH BALLOON PHYSICS & BUTTON STYLE)
       const Scene1Intro = ({ onStart }) => {
-        const BALLOON_TEXTS = ["喜欢你~", "要开心！", "暴富暴富✨", "天天好心情", "吃不胖！", "永远美少女", "平安喜乐", "好运连连"];
+        const BALLOON_TEXTS = ["这是一个有着香气的晚上~", "要开心！", "暴富暴富✨", "天天好心情", "吃不胖！", "永远美少女", "平安喜乐", "好运连连"];
         
         // Define specific colors for balloons based on index/assumed image content
         // 0: Pink/Red, 1: Blue/Teal, 2: Yellow/Orange
@@ -1081,7 +1080,7 @@
               <UsagiCharacter 
                 action={usagiAction} 
                 className="w-32 h-32 md:w-48 md:h-48" 
-                imageSrc={photosGathered ? './images/camera.png' : './images/camera1.png'}
+                imageSrc={photosGathered ? 'https://test.fukit.cn/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/4l2h/4320X4664/camera.png/webp' : 'https://test.fukit.cn/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/aFhf/4568X4876/camera1.png/webp'}
               />
             </motion.div>
             {showButton && photosGathered && !isBackgroundMode && (
@@ -1131,7 +1130,7 @@
 
             {/* Phase 1: Shengri (Appears Immediately t=0) */}
             <motion.img 
-              src="https://xland.eu.org/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/TGpb/4320X4992/shengri.png" 
+              src="https://test.fukit.cn/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/TGpb/4320X4992/shengri.png/webp" 
               alt="Decoration" 
               className="absolute bottom-4 right-4 w-32 md:w-56 z-10 pointer-events-none"
               initial={{ opacity: 0 }} 
@@ -1149,7 +1148,7 @@
                   
                   {/* Sticker (Xingfu) */}
                   <motion.img 
-                     src="https://xland.eu.org/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/LCWH/5008X4320/xingfu.png" 
+                     src="https://test.fukit.cn/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/LCWH/5008X4320/xingfu.png/webp" 
                      alt="Happiness" 
                      className="absolute -top-6 -right-6 w-24 md:w-32 z-50 drop-shadow-md pointer-events-none origin-center"
                      style={{ transform: 'translate(1cm, -1cm) scale(1.5) rotate(12deg)' }}
@@ -1162,7 +1161,7 @@
                       Moved down 1.5cm from previous position (1cm). New position: 2.5cm.
                   */}
                   <motion.img 
-                     src="https://xland.eu.org/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/JCAe/8000X5520/kuang.png" 
+                     src="https://test.fukit.cn/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/JCAe/8000X5520/kuang.png/webp" 
                      alt="Frame" 
                      className="absolute -bottom-10 -left-12 w-[130%] max-w-none z-50 pointer-events-none"
                      style={{ transform: 'translate(-1cm, 2.5cm)' }}
