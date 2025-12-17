@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -24,12 +25,12 @@
                 cream: '#FFF9E6', wood: '#8D6E63', woodDark: '#5D4037'
               },
               vinyl: {
-                bg: '#2b241c', // Darker richer brown
+                bg: '#1a1a1a', 
                 gold: '#d4af37',
                 goldDim: '#8a7224',
                 text: '#e8dcc5',
-                black: '#1a1a1a',
-                groove: '#222222'
+                black: '#121212',
+                groove: '#1f1f1f'
               }
             },
             fontFamily: {
@@ -43,23 +44,26 @@
               'bounce-slow': 'bounce 2s infinite',
               'drift': 'drift 10s linear infinite',
               'spin-slow': 'spin 8s linear infinite',
-              'spin-vinyl': 'spin 1.8s linear infinite', // Faster for 33rpm feel
+              'spin-vinyl': 'spin 1.8s linear infinite',
               'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'sway': 'sway 2s ease-in-out infinite',
             },
             keyframes: {
               float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
-              drift: { '0%': { transform: 'translateY(0) rotate(0deg)', opacity: '0' }, '50%': { opacity: '0.5' }, '100%': { transform: 'translateY(100px) rotate(180deg)', opacity: '0' } }
+              drift: { '0%': { transform: 'translateY(0) rotate(0deg)', opacity: '0' }, '50%': { opacity: '0.5' }, '100%': { transform: 'translateY(100px) rotate(180deg)', opacity: '0' } },
+              sway: { '0%, 100%': { transform: 'rotate(-10deg)' }, '50%': { transform: 'rotate(10deg)' } }
             },
             boxShadow: {
               'soft': '0 8px 32px rgba(93, 64, 55, 0.15)',
               'glow': '0 0 15px rgba(240, 98, 146, 0.5)',
-              'vinyl': '0 20px 50px rgba(0,0,0,0.6), inset 0 0 0 2px #333',
+              'vinyl': '0 20px 50px rgba(0,0,0,0.8), inset 0 0 0 2px #333',
               'gold-glow': '0 0 20px rgba(212, 175, 55, 0.4)',
               'wood': 'inset 0 0 60px rgba(0,0,0,0.5)',
             },
             backgroundImage: {
               'wood-pattern': "url('https://www.transparenttextures.com/patterns/wood-pattern.png')",
-              'vinyl-grooves': "repeating-radial-gradient(#111 0, #111 2px, #222 3px, #222 4px)"
+              'vinyl-grooves': "repeating-radial-gradient(#111 0, #111 2px, #222 3px, #222 4px)",
+              'scratched': "url('https://www.transparenttextures.com/patterns/stardust.png')" 
             }
           }
         }
@@ -94,19 +98,20 @@
 
       /* Specific Vinyl Styles */
       .vinyl-record {
-        background: radial-gradient(circle at center, #000 0%, #1a1a1a 25%, #000 26%, #1a1a1a 27%, #111 100%);
-        box-shadow: inset 0 0 0 1px #333, 0 10px 20px rgba(0,0,0,0.5);
+        background: radial-gradient(circle at center, #050505 0%, #1a1a1a 25%, #050505 26%, #1a1a1a 27%, #0a0a0a 100%);
+        box-shadow: inset 0 0 0 1px #333, 0 10px 20px rgba(0,0,0,0.6);
       }
       .grooves {
         background: repeating-radial-gradient(
-          #111 0, 
-          #111 3px, 
-          #222 4px, 
-          #222 5px
+          #0a0a0a 0, 
+          #0a0a0a 2px, 
+          #1f1f1f 3px, 
+          #1f1f1f 4px
         );
+        opacity: 0.8;
       }
       .arm-shadow {
-        filter: drop-shadow(4px 4px 4px rgba(0,0,0,0.5));
+        filter: drop-shadow(4px 4px 6px rgba(0,0,0,0.6));
       }
       
       /* Range Slider Customization */
@@ -178,6 +183,7 @@
         ],
         giftImage: './images/usagi-surprise.png',
         loginBackground: 'https://xland.eu.org/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251211/js6e/1922X1074/background.jpg', 
+        backBtn: 'https://test.fukit.cn/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/bzad/2768X2688/back.png/webp',
         sounds: {
           bgm: BGM_URL,
         }
@@ -300,8 +306,9 @@
       };
 
       // Back Button
-      const BackButton = ({ onClick, disabled = false }) => {
+      const BackButton = ({ onClick, disabled = false, scene }) => {
         const [isAnimating, setIsAnimating] = useState(false);
+        const isVinyl = scene === 'VINYL';
 
         const handleClick = (e) => {
           if (e && e.stopPropagation) e.stopPropagation();
@@ -332,11 +339,19 @@
                   rotate: [0, -5, 5, 0], 
                   transition: { repeat: Infinity, duration: 3, ease: "easeInOut" } 
                }}
-               animate={isAnimating ? { y: [0, 60, 0] } : { y: 0 }}
-               transition={isAnimating ? { duration: 0.6, times: [0, 0.4, 1], ease: "easeInOut" } : {}}
+               animate={
+                 isVinyl 
+                 ? { rotate: [-10, 10, -10], y: [0, 2, 0] } 
+                 : (isAnimating ? { y: [0, 60, 0] } : { y: 0 })
+               }
+               transition={
+                 isVinyl 
+                 ? { rotate: { repeat: Infinity, duration: 2, ease: "easeInOut" }, y: { repeat: Infinity, duration: 1 } }
+                 : (isAnimating ? { duration: 0.6, times: [0, 0.4, 1], ease: "easeInOut" } : {})
+               }
             >
                <img 
-                 src="https://test.fukit.cn/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/bzad/2768X2688/back.png/webp" 
+                 src={ASSETS.backBtn}
                  alt="Back" 
                  className="w-20 md:w-24 object-contain filter drop-shadow-lg hover:brightness-105 transition-all" 
                  draggable="false"
@@ -789,7 +804,7 @@
         );
       };
 
-      // Scene Vinyl Player (NEW)
+      // Scene Vinyl Player (OPTIMIZED)
       const SceneVinylPlayer = () => {
         const PLAYLIST = [
            { title: "红色高跟鞋", artist: "蔡健雅", url: "https://audio.fukit.cn/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251215/Wahg/42651_LOW_20250602141342_1_206013_M017967.mp3" },
@@ -845,7 +860,6 @@
 
         useEffect(() => {
              if(isPlaying && audioRef.current) {
-                 // Slight delay to ensure src is updated
                  setTimeout(() => {
                      audioRef.current.play().catch(e => console.warn(e));
                  }, 50);
@@ -887,10 +901,7 @@
 
           const draw = () => {
             rafId.current = requestAnimationFrame(draw);
-            
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.beginPath();
             
             if (isPlaying) {
                const time = Date.now() / 1000;
@@ -903,15 +914,15 @@
                dataArray.fill(5); 
             }
 
+            // Draw visualizer
+            ctx.beginPath();
             for (let i = 0; i < bufferLength; i++) {
                 const barHeight = dataArray[i] * 0.8;
                 const angle = (i * Math.PI * 2) / bufferLength;
-                
                 const x1 = centerX + Math.cos(angle) * radius;
                 const y1 = centerY + Math.sin(angle) * radius;
                 const x2 = centerX + Math.cos(angle) * (radius + barHeight);
                 const y2 = centerY + Math.sin(angle) * (radius + barHeight);
-                
                 ctx.moveTo(x1, y1);
                 ctx.lineTo(x2, y2);
             }
@@ -919,16 +930,7 @@
             ctx.lineWidth = 3;
             ctx.lineCap = 'round';
             ctx.stroke();
-
-            const bass = isPlaying ? dataArray[0] : 0;
-            const glowRadius = radius * 0.9 + (bass / 10);
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, glowRadius, 0, 2 * Math.PI);
-            ctx.strokeStyle = `rgba(240, 98, 146, ${Math.min(1, bass / 150)})`; 
-            ctx.lineWidth = 2;
-            ctx.stroke();
           };
-          
           draw();
           return () => cancelAnimationFrame(rafId.current);
         }, [isPlaying]);
@@ -946,11 +948,7 @@
         };
 
         return (
-          <div className="relative w-full h-screen bg-[#2b241c] flex flex-col items-center justify-center overflow-hidden">
-             {/* Dynamic Background */}
-             <div className="absolute inset-0 bg-wood-pattern opacity-30 mix-blend-overlay pointer-events-none"></div>
-             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
-
+          <div className="relative w-full h-screen bg-vinyl-bg flex flex-col items-center justify-center overflow-hidden">
              {/* Floating Notes */}
              {isPlaying && (
                 <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -968,55 +966,72 @@
                 </div>
              )}
 
+             {/* 1. Background: Texture & Scratches */}
+             <div className="absolute inset-0 bg-scratched opacity-20 pointer-events-none mix-blend-overlay"></div>
+             <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent pointer-events-none"></div>
+
+             {/* 2. Warm Yellow Glow Animation */}
+             <motion.div 
+               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] bg-[#ffb74d] rounded-full blur-[100px] pointer-events-none"
+               animate={{ 
+                 opacity: isPlaying ? [0.1, 0.25, 0.1] : 0,
+                 scale: isPlaying ? [1, 1.2, 1] : 0.8 
+               }}
+               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+             />
+
              {/* Main Turntable Unit */}
              <div className="relative z-10 w-[95%] max-w-2xl aspect-square md:aspect-[4/3] bg-[#4E342E] rounded-3xl shadow-vinyl border-t border-white/10 flex flex-col items-center justify-center p-8 overflow-hidden group">
-                <div className="absolute inset-0 shadow-wood pointer-events-none rounded-3xl"></div>
+                <div className="absolute inset-0 bg-wood-pattern opacity-40 mix-blend-multiply pointer-events-none rounded-3xl"></div>
                 
                 {/* Visualizer Canvas Layer */}
-                <canvas ref={canvasRef} width={800} height={800} className="absolute inset-0 w-full h-full pointer-events-none opacity-60 mix-blend-screen" />
+                <canvas ref={canvasRef} width={800} height={800} className="absolute inset-0 w-full h-full pointer-events-none opacity-50 mix-blend-screen" />
 
                 {/* Turntable Platter */}
                 <div className="relative w-[280px] h-[280px] md:w-[380px] md:h-[380px] rounded-full bg-[#111] shadow-2xl flex items-center justify-center border-4 border-[#222]">
                    
-                   {/* The Record */}
+                   {/* The Record - Slow Spin */}
                    <motion.div 
                       className={`relative w-[95%] h-[95%] rounded-full vinyl-record flex items-center justify-center overflow-hidden border border-black/50`}
                       animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
-                      transition={isPlaying ? { repeat: Infinity, duration: 2, ease: "linear" } : { duration: 0.5 }}
+                      transition={isPlaying ? { repeat: Infinity, duration: 4, ease: "linear" } : { duration: 0.5 }}
                    >
-                      <div className="absolute inset-0 grooves opacity-40"></div>
-                      <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent rounded-full pointer-events-none"></div>
+                      <div className="absolute inset-0 grooves"></div>
+                      <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent rounded-full pointer-events-none"></div>
                       
                       {/* Record Label */}
-                      <div className="w-[35%] h-[35%] bg-usagi-pink rounded-full flex items-center justify-center shadow-lg border-2 border-white/20 relative">
+                      <div className="w-[35%] h-[35%] bg-usagi-pink rounded-full flex items-center justify-center shadow-lg border-2 border-white/20 relative z-20">
                          <img src="https://test.fukit.cn/autoupload/f/IeSYb0Mnf1Z62nIKYGB4NyfNcKcqEnRmcljopnyJoMs/20251214/P3yB/4272X4300/mai.png/webp" className="w-[80%] h-[80%] object-cover rounded-full" alt="Album Art" />
                          <div className="absolute w-2 h-2 bg-black rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
-                         <div className="absolute inset-0 rounded-full border border-black/10"></div>
                       </div>
                    </motion.div>
                 </div>
 
-                {/* Tone Arm */}
-                <div className="absolute top-[10%] right-[5%] w-24 h-64 md:w-32 md:h-80 pointer-events-none">
-                    {/* Pivot Base */}
-                    <div className="absolute top-4 right-4 w-12 h-12 rounded-full bg-gradient-to-b from-[#888] to-[#444] shadow-lg z-20 flex items-center justify-center border border-white/20">
+                {/* Tone Arm - Jumping Animation */}
+                <div className="absolute top-[8%] right-[4%] w-24 h-64 md:w-32 md:h-80 pointer-events-none z-30">
+                    <div className="absolute top-4 right-4 w-12 h-12 rounded-full bg-gradient-to-b from-[#888] to-[#444] shadow-lg flex items-center justify-center border border-white/20">
                        <div className="w-6 h-6 rounded-full bg-[#222] border border-white/10"></div>
                     </div>
-                    {/* The Arm */}
+                    
                     <motion.div 
-                       className="absolute top-10 right-10 w-6 h-[80%] bg-[#ccc] origin-top rounded-full shadow-xl border-l border-white/50 z-10 arm-shadow"
-                       style={{ transformOrigin: "50% 10px" }}
-                       animate={{ rotate: isPlaying ? 35 : 0 }}
-                       transition={{ duration: 1, type: "spring" }}
+                       className="absolute top-10 right-10 w-6 h-[80%] bg-[#ccc] origin-top rounded-full shadow-xl border-l border-white/50 arm-shadow"
+                       style={{ transformOrigin: "50% 12px" }}
+                       animate={{ 
+                         rotate: isPlaying ? 32 : 0,
+                         y: isPlaying ? [0, 1.5, 0] : 0 // Needle bouncing
+                       }}
+                       transition={{ 
+                         rotate: { duration: 1, type: "spring" },
+                         y: { duration: 0.4, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" } // Rhythm bounce
+                       }}
                     >
                        <div className="w-full h-full bg-gradient-to-r from-[#ddd] via-[#fff] to-[#999] rounded-full"></div>
-                       {/* Cartridge/Needle */}
-                       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-10 bg-black rounded-sm border-t-2 border-usagi-gold"></div>
+                       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-10 bg-black rounded-sm border-t-2 border-usagi-gold shadow-lg"></div>
                     </motion.div>
                 </div>
 
-                {/* Controls Area (Bottom) */}
-                <div className="absolute bottom-0 left-0 w-full h-32 bg-black/60 backdrop-blur-md border-t border-white/10 flex flex-col justify-center px-6 md:px-10 py-4 gap-2">
+                {/* Controls Area */}
+                <div className="absolute bottom-0 left-0 w-full h-32 bg-black/60 backdrop-blur-md border-t border-white/10 flex flex-col justify-center px-6 md:px-10 py-4 gap-2 z-40">
                    
                    {/* Progress Bar */}
                    <div className="w-full flex items-center gap-3 text-xs font-mono text-[#d4af37]">
@@ -1045,12 +1060,17 @@
                           <motion.button onClick={nextTrack} whileTap={{ scale: 0.9 }} className="text-white/60 hover:text-white"><SkipForward /></motion.button>
                        </div>
 
-                       {/* Song Info (Upload) */}
+                       {/* Song Info & 3. Custom Upload Button */}
                        <div className="flex-1 mx-4 md:mx-8 flex flex-col justify-center items-center">
                           <div className="text-usagi-gold font-hand text-lg md:text-xl truncate w-full text-center">{currentTitle}</div>
-                          <label className="cursor-pointer flex items-center gap-2 text-xs text-white/50 hover:text-white transition-colors mt-1">
-                             <Upload size={12} /> Upload Music
-                             <input type="file" accept="audio/*" onChange={handleFileUpload} className="hidden" />
+                          
+                          <label className="cursor-pointer group flex flex-col items-center justify-center gap-1 mt-2 transform hover:scale-105 transition-transform">
+                              <div className="w-8 h-8 rounded-full bg-black border border-gray-600 flex items-center justify-center relative shadow-md">
+                                  <div className="absolute inset-0 rounded-full border border-white/20 opacity-50" style={{background: 'repeating-radial-gradient(#111 0, #111 1px, #222 2px)'}}></div>
+                                  <div className="w-3 h-3 rounded-full bg-usagi-orange border border-black z-10"></div>
+                              </div>
+                              <span className="text-[10px] text-usagi-gold opacity-60 group-hover:opacity-100 font-sans tracking-wide">Upload Music</span>
+                              <input type="file" accept="audio/*" onChange={handleFileUpload} className="hidden" />
                           </label>
                        </div>
 
@@ -1069,7 +1089,6 @@
                 </div>
              </div>
              
-             {/* Audio Element without crossOrigin (fixes 'no supported sources' if CORS headers missing) */}
              <audio 
                 ref={audioRef} 
                 src={currentTrack} 
@@ -1786,7 +1805,7 @@
                <div className="fixed top-4 right-4 z-50"><button onClick={toggleAudio} className="bg-white/80 p-3 rounded-full shadow-md hover:bg-white border border-usagi-main">{muted ? <VolumeX size={24}/> : <Volume2 size={24}/>}</button></div>
             )}
             
-            <BackButton onClick={back} disabled={scene==='INTRO' || scene==='LOGIN'} />
+            <BackButton onClick={back} disabled={scene==='INTRO' || scene==='LOGIN'} scene={scene} />
             
             <AnimatePresence mode="wait">
               {scene === 'LOGIN' && <Scene0Login key="login" onLogin={handleLoginSuccess} />}
